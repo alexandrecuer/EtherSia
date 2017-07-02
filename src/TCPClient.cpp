@@ -149,13 +149,13 @@ boolean TCPClient::havePacket()
 
         tcpHeader->flags = TCP_FLAG_RST | TCP_FLAG_ACK;
         
-		//prepareReply() swaps ethernet source and destination mac and IP and fixes a fresh hopLimit
+        //prepareReply() swaps ethernet source and destination mac and IP and fixes a fresh hopLimit
         _ether.prepareReply();
         packet.setProtocol(IP6_PROTO_TCP);
 		
         //swap ports
-		tcpHeader->sourcePort = tcpHeader->destinationPort;
-		tcpHeader->destinationPort = _remotePort;
+        tcpHeader->sourcePort = tcpHeader->destinationPort;
+        tcpHeader->destinationPort = _remotePort;
 
         //swap sequence numbers and add 1 to the sequence number we are acknowledging
         tmp32 = ntohl(tcpHeader->sequenceNum);
@@ -167,11 +167,11 @@ boolean TCPClient::havePacket()
         */
         tcpHeader->dataOffset = 5 << 4;
         packet.setPayloadLength((tcpHeader->dataOffset & 0xF0)>>2);
-		tcpHeader->window = htons(TCP_WINDOW_SIZE);
-		tcpHeader->urgentPointer = 0;
+        tcpHeader->window = htons(TCP_WINDOW_SIZE);
+        tcpHeader->urgentPointer = 0;
         tcpHeader->checksum = 0;
         tcpHeader->checksum = htons(packet.calculateChecksum());
-		_ether.send();
+        _ether.send();
         goto drop;
 
     found :
@@ -294,14 +294,14 @@ boolean TCPClient::havePacket()
     tcp_send_nodata :
         packet.setPayloadLength((tcpHeader->dataOffset & 0xF0)>>2);
         fillTCPHeader();
-	    _ether.send();
+        _ether.send();
 
     goto drop;
 
     //this is the check for retransmit algorithm !!
     check_for_retransmit :
         if (_unAckLen>0) {
-		        if (_timer == 0){
+            if (_timer == 0){
                 //first we update the timer with an exponential backoff
                 _timer = UIP_RTO << (_nrtx > 4 ? 4 : _nrtx);
                 //if we've reached the maximum retransmit number, we send a RST
@@ -393,13 +393,13 @@ void TCPClient::sendInternal(uint16_t length, boolean /*isReply*/)
     tcpHeader->dataOffset=6<<4;
     packet.setPayloadLength(((tcpHeader->dataOffset & 0xF0)>>2) + length);
     fillTCPHeader();
-	_ether.send();
+    _ether.send();
 
     if (!(_appliFlags & UIP_REXMIT)){
         _unAckLen+=length;
         _timer=_rto;
-		//added on 01/07/2017
-		_nrtx=0;
+        //added on 01/07/2017
+        _nrtx=0;
     }
 
 }
