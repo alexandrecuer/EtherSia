@@ -161,7 +161,6 @@ protected:
      * @note dataOffset should have been set before any call to this methodIn havePacket()It 
      * @note fixes the protocol in the IP header - does not fix payloadLength in the IP header
      */
-	//basicSend();
     void fillTCPHeader(); 
 
     /**
