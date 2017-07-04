@@ -38,6 +38,16 @@ void MACAddress::setIPv6Multicast(const uint8_t *address)
     _address[5] = address[15];
 }
 
+void MACAddress::fromBytes(uint8_t one, uint8_t two, uint8_t three, uint8_t four, uint8_t five, uint8_t six)
+{
+    _address[0] = one;
+    _address[1] = two;
+    _address[2] = three;
+    _address[3] = four;
+    _address[4] = five;
+    _address[5] = six;
+}
+
 boolean MACAddress::fromString(const char *macstr)
 {
     uint8_t pos=0;
