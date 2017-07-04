@@ -45,6 +45,12 @@ public:
      * @return true if successful, false if parsing failed
      */
     boolean fromString(const char *macstr);
+    
+    /**
+     * Parse six bytes into a MACAddress object.
+     * @param macstr a human readable string containing a 17 character MAC address
+     */
+    void fromBytes(uint8_t one, uint8_t two, uint8_t three, uint8_t four, uint8_t five, uint8_t six);
 
     /**
      * Cast the MAC address to an array of octets.
