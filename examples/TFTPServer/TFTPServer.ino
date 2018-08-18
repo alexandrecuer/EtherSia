@@ -4,6 +4,7 @@
  * This sketch allows you to:
  *   - write a file to the serial port (using the 'serial' filename)
  *   - read/write the internal EEPROM (using the 'eeprom' filename)
+ *   - read/write an external AT24C128 EEPROM (using the 'i2c' filename)
  *
  * On your computer open a TFTP tool and connect to the Arduino.
  * Switch to 'binary' mode and then upload a local filename to the 'serial'
@@ -39,6 +40,9 @@ void setup() {
     Serial.begin(57600);
     Serial.println("[EtherSia TFTPServer]");
 
+    // Setup i2c
+    Wire.begin();
+
     // Start Ethernet
     if (ether.begin(macAddress) == false) {
         Serial.println("Failed to configure Ethernet");
@@ -56,5 +60,8 @@ void setup() {
 void loop() {
     ether.receivePacket();
 
-    tftp.handleRequest();
+    if (!tftp.handleRequest()) {
+        // If TFTP didn't handle the request, reject the packet
+        ether.rejectPacket();
+    }
 }

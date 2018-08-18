@@ -17,6 +17,11 @@ MACAddress::MACAddress(uint8_t one, uint8_t two, uint8_t three, uint8_t four, ui
     _address[5] = six;
 }
 
+MACAddress::MACAddress(const byte macaddr[6])
+{
+    memcpy(_address, macaddr, sizeof(_address));
+}
+
 MACAddress::MACAddress(const char *macstr)
 {
     fromString(macstr);
@@ -25,6 +30,16 @@ MACAddress::MACAddress(const char *macstr)
 MACAddress::operator uint8_t*()
 {
     return _address;
+}
+
+boolean MACAddress::operator==(const MACAddress& address) const
+{
+    return memcmp(_address, address._address, sizeof(_address)) == 0;
+}
+
+boolean MACAddress::operator!=(const MACAddress& address) const
+{
+    return !(*this == address);
 }
 
 // See RFC2464 section 7
@@ -38,6 +53,7 @@ void MACAddress::setIPv6Multicast(const uint8_t *address)
     _address[5] = address[15];
 }
 
+<<<<<<< HEAD
 void MACAddress::fromBytes(uint8_t one, uint8_t two, uint8_t three, uint8_t four, uint8_t five, uint8_t six)
 {
     _address[0] = one;
@@ -46,6 +62,11 @@ void MACAddress::fromBytes(uint8_t one, uint8_t two, uint8_t three, uint8_t four
     _address[3] = four;
     _address[4] = five;
     _address[5] = six;
+=======
+boolean MACAddress::isIPv6Multicast()
+{
+    return _address[0] == 0x33 && _address[1] == 0x33;
+>>>>>>> refs/remotes/njh/master
 }
 
 boolean MACAddress::fromString(const char *macstr)
