@@ -54,15 +54,44 @@ static_assert(sizeof(struct icmp6_error_header) == ICMP6_ERROR_HEADER_LEN, "Size
 
 
 /**
+ * Structure for accessing the fields of a ICMP6 Echo Request/Reply packet
+ * @private
+ */
+struct icmp6_echo_header {
+    uint16_t identifier;
+    uint16_t sequenceNumber;
+} __attribute__((__packed__));
+#define ICMP6_ECHO_HEADER_LEN     (4)
+#define ICMP6_ECHO_HEADER_OFFSET  (ICMP6_HEADER_OFFSET + ICMP6_HEADER_LEN)
+
+/* Verify that compiler gets the structure size correct */
+static_assert(sizeof(struct icmp6_echo_header) == ICMP6_ECHO_HEADER_LEN, "Size is not correct");
+
+
+
+/**
+ * Structure for options that store a Link address
+ * @private
+ */
+struct icmp6_option_mac {
+    uint8_t type;
+    uint8_t len;
+    MACAddress mac;
+} __attribute__((__packed__));
+#define ICMP6_OPTION_MAC_LEN       (8)
+
+/* Verify that compiler gets the structure size correct */
+static_assert(sizeof(struct icmp6_option_mac) == ICMP6_OPTION_MAC_LEN, "Size is not correct");
+
+
+/**
  * Structure for accessing the fields of a ICMP6 Router Solicitation packet
  * @private
  */
 struct icmp6_rs_header {
     uint8_t reserved[4];
 
-    uint8_t option_type;
-    uint8_t option_len;
-    MACAddress option_mac;
+    struct icmp6_option_mac option1;
 } __attribute__((__packed__));
 #define ICMP6_RS_HEADER_LEN       (12)
 #define ICMP6_RS_HEADER_OFFSET    (ICMP6_HEADER_OFFSET + ICMP6_HEADER_LEN)
@@ -112,8 +141,10 @@ struct icmp6_prefix_information {
 struct icmp6_ns_header {
     uint8_t reserved[4];
     IPv6Address target;
+
+    struct icmp6_option_mac option1;
 } __attribute__((__packed__));
-#define ICMP6_NS_HEADER_LEN       (20)
+#define ICMP6_NS_HEADER_LEN       (28)
 #define ICMP6_NS_HEADER_OFFSET    (ICMP6_HEADER_OFFSET + ICMP6_HEADER_LEN)
 
 /* Verify that compiler gets the structure size correct */
@@ -128,8 +159,10 @@ struct icmp6_na_header {
     uint8_t flags;
     uint8_t reserved[3];
     IPv6Address target;
+
+    struct icmp6_option_mac option1;
 } __attribute__((__packed__));
-#define ICMP6_NA_HEADER_LEN       (20)
+#define ICMP6_NA_HEADER_LEN       (28)
 #define ICMP6_NA_HEADER_OFFSET    (ICMP6_HEADER_OFFSET + ICMP6_HEADER_LEN)
 
 /* Verify that compiler gets the structure size correct */
@@ -150,6 +183,7 @@ public:
 
     union {
         struct icmp6_error_header err;
+        struct icmp6_echo_header echo;
         struct icmp6_ra_header ra;
         struct icmp6_rs_header rs;
         struct icmp6_na_header na;

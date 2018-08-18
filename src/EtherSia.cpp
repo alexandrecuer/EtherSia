@@ -156,7 +156,6 @@ void EtherSia::rejectPacket()
         icmp6ErrorReply(ICMP6_TYPE_UNREACHABLE, ICMP6_CODE_PORT_UNREACHABLE);
     } else if (packet.protocol() == IP6_PROTO_ICMP6) {
         // Ignore ICMPv6 packets
-        return;
     } else {
         // Reply with Unrecognised Next Header
         icmp6ErrorReply(ICMP6_TYPE_PARAM_PROB, ICMP6_CODE_UNRECOGNIZED_NH);
@@ -183,23 +182,13 @@ void EtherSia::prepareSend()
 void EtherSia::prepareReply()
 {
     IPv6Packet& packet = (IPv6Packet&)_ptr;
-    IPv6Address *replySourceAddress;
+    IPv6Address destination = packet.source();
+    MACAddress etherDestination = packet.etherSource();
 
-    _bufferContainsReceived = false;
+    prepareSend();
 
-    if (isOurAddress(packet.destination()) == ADDRESS_TYPE_GLOBAL) {
-        replySourceAddress = &_globalAddress;
-    } else {
-        replySourceAddress = &_linkLocalAddress;
-    }
-
-    packet.setHopLimit(IP6_DEFAULT_HOP_LIMIT);
-
-    packet.setDestination(packet.source());
-    packet.setSource(*replySourceAddress);
-
-    packet.setEtherDestination(packet.etherSource());
-    packet.setEtherSource(_localMac);
+    packet.setDestination(destination);
+    packet.setEtherDestination(etherDestination);
 }
 
 void EtherSia::send()

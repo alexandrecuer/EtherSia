@@ -139,6 +139,15 @@ public:
     }
 
     /**
+     * Get the local MAC address of this network interface
+     *
+     * @return The local MAC address of this network interface
+     */
+    inline MACAddress& localMac() {
+        return _localMac;
+    }
+
+    /**
      * Get the MAC address of the router on the local subnet
      *
      * This is used as the Ethernet destination address for
@@ -470,6 +479,7 @@ protected:
     void icmp6PacketSend();
 };
 
+#include "PingClient.h"
 #include "TCPServer.h"
 #include "HTTPServer.h"
 #include "TFTPServer.h"
