@@ -16,8 +16,9 @@
 EtherSia_ENC28J60 ether(10);
 
 /** Define MQTT-SN client */
-MQTTSN_Client client(ether);
+MQTTSNClient client(ether);
 
+MQTTSNTopic topic("my/test/topic");
 
 
 /** Called once at the start */
@@ -43,17 +44,27 @@ void setup()
     }
 
     Serial.println(F("Ready."));
+
+
+    client.connect();
 }
 
 /** the loop function runs over and over again forever */
 void loop()
 {
     ether.receivePacket();
+  
+    if (client.checkConnected() == false) {
+        Serial.println(F("Not connected"));
+    } else {
 
-    static unsigned long nextMessage = millis();
-    if ((long)(millis() - nextMessage) >= 0) {
-        Serial.println(F("Publishing to MQTT-SN"));
-        client.publish("SN", "Hello World", 11);
-        nextMessage = millis() + 5000;
+        // We are connected to the MQTT-SN server: send a message every 5 seconds
+        static unsigned long nextMessage = millis();
+        if ((long)(millis() - nextMessage) >= 0) {
+            Serial.println(F("Publishing to MQTT-SN"));
+            client.publish(topic, "Hello World", MQTT_SN_QOS_0);
+            nextMessage = millis() + 5000;
+        }
+
     }
 }

@@ -27,7 +27,8 @@ Limitations
 - Ethernet only
 - No DHCPv6
 - No Routing or RPL
-- Stateless TCP (single packet request/response)
+- No TCP Client
+- Stateless TCP in HTTP Server (single packet request/response)
 - No fragmentation support
 - A single local router on the network is assumed
 - The network prefix length is assumed to be /64
@@ -48,7 +49,6 @@ There are the results of boards I have tested with:
 |-------------------------------|------------------------|---------|--------|----------------------|
 | [Arduino Ethernet Shield]     | [EtherSia_W5100]       | Working | 10     | None                 |
 | [Arduino Ethernet Shield 2]   | [EtherSia_W5500]       | Working | 10     | None                 |
-| [Nanode v5]                   | [EtherSia_ENC28J60]    | Working | 8      | UNI/O 11AA02E48      |
 | [Nanode v5]                   | [EtherSia_ENC28J60]    | Working | 8      | UNI/O 11AA02E48      |
 | [Nanode RF] / Classic         | [EtherSia_ENC28J60]    | -       | 8      | MCP79411             |
 | [Nano Shield]                 | [EtherSia_ENC28J60]    | Working | 10     | None                 |
